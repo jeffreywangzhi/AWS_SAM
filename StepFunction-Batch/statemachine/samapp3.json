@@ -1,0 +1,79 @@
+{
+  "Comment": "A Hello World example of the Amazon States Language using Pass states",
+  "StartAt": "Open Case",
+  "States": {
+    "Open Case": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:OpenCaseFunction0713",
+      "Next": "Start Branch"
+    },
+    "Start Branch": {
+      "Type": "Parallel",
+      "End": true,
+      "Branches":[
+        {
+          "StartAt": "Operate Batch",
+          "States": {
+            "Operate Batch": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "Parameters": {
+                "JobDefinition": "arn:aws:batch:us-east-1:242130168559:job-definition/job:8",
+                "JobName": "jobTEST2",
+                "JobQueue": "arn:aws:batch:us-east-1:242130168559:job-queue/default-queue",
+                "Parameters": {
+                  "param.$": "$.param"
+                }
+            },
+      "End": true
+    }
+          }
+        },
+        {
+          "StartAt": "Assign Case",
+          "States": {
+            "Assign Case": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:AssignCaseFunction0713",
+      "Next": "Work On Case"
+    },
+            "Work On Case": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:WorkOnCaseFunction0713",
+      "Next": "Is Case Resolved"
+    },
+            "Is Case Resolved": {
+        "Type" : "Choice",
+        "Choices": [ 
+          {
+            "Variable": "$.Status",
+            "NumericEquals": 1,
+            "Next": "Close Case"
+          },
+          {
+            "Variable": "$.Status",
+            "NumericEquals": 0,
+            "Next": "Escalate Case"
+          }
+      ]
+    },
+            "Close Case": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:CloseCaseFunction0713",
+      "End": true
+    },
+            "Escalate Case": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:EscalateCaseFunction0713",
+      "Next": "Fail"
+    },
+    "Fail": {
+      "Type": "Fail",
+      "Cause": "Engage Tier 2 Support." 
+    }
+          }
+        }
+      ]
+    }
+  }
+}
