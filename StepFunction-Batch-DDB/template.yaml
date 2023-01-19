@@ -38,8 +38,6 @@ Resources:
             FunctionName: !Ref CloseCaseFunction
         - LambdaInvokePolicy:
             FunctionName: !Ref EscalateCaseFunction
-        # - DynamoDBWritePolicy:
-        #     TableName: !Ref TransactionTable
 
   OperateBatchEnv:
     Type: AWS::Batch::ComputeEnvironment
@@ -71,8 +69,6 @@ Resources:
     Properties:
       Type: container
       JobDefinitionName: job2
-      # PlatformCapabilities:
-      #   - FARGATE
       ContainerProperties:
         Memory: 2048
         Vcpus: 1
