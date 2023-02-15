@@ -1,5 +1,5 @@
-# AWS-REPO
-AWS-related project repository.
+# AWS SAM REPO
+AWS SAM template repository.
 
 - 2022/12/22: **AWS Integration: Step Function, Lambda, Batch, DynamoDB** (/StepFunction-Batch-DDB)
 ![stepfunction.png](StepFunction-Batch-DDB.png)
