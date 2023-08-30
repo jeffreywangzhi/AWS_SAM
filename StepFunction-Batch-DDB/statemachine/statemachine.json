@@ -4,7 +4,7 @@
   "States": {
     "Open Case": {
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:OpenCaseFunction0713",
+      "Resource": "arn:aws:lambda:us-east-1:aws-account:function:OpenCaseFunction0713",
       "Next": "Start Branch"
     },
     "Start Branch": {
@@ -18,9 +18,9 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::batch:submitJob.sync",
       "Parameters": {
-                "JobDefinition": "arn:aws:batch:us-east-1:242130168559:job-definition/job:8",
+                "JobDefinition": "arn:aws:batch:us-east-1:aws-account:job-definition/job:8",
                 "JobName": "jobTEST2",
-                "JobQueue": "arn:aws:batch:us-east-1:242130168559:job-queue/default-queue",
+                "JobQueue": "arn:aws:batch:us-east-1:aws-account:job-queue/default-queue",
                 "Parameters": {
                   "param.$": "$.param"
                 }
@@ -34,12 +34,12 @@
           "States": {
             "Assign Case": {
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:AssignCaseFunction0713",
+      "Resource": "arn:aws:lambda:us-east-1:aws-account:function:AssignCaseFunction0713",
       "Next": "Work On Case"
     },
             "Work On Case": {
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:WorkOnCaseFunction0713",
+      "Resource": "arn:aws:lambda:us-east-1:aws-account:function:WorkOnCaseFunction0713",
       "Next": "Is Case Resolved"
     },
             "Is Case Resolved": {
@@ -59,7 +59,7 @@
     },
             "Close Case": {
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:CloseCaseFunction0713",
+      "Resource": "arn:aws:lambda:us-east-1:aws-account:function:CloseCaseFunction0713",
       "Next": "Record Case"
     },
             "Record Case": {
@@ -90,7 +90,7 @@
     },
             "Escalate Case": {
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:242130168559:function:EscalateCaseFunction0713",
+      "Resource": "arn:aws:lambda:us-east-1:aws-account:function:EscalateCaseFunction0713",
       "Next": "Fail"
     },
     "Fail": {
