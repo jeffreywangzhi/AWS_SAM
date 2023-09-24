@@ -1,5 +1,5 @@
 # AWS SAM REPO
-AWS SAM templates (Step Functions, Lambda Functions, Batch, DynamoDB).
+AWS SAM templates (StepFunctions, Lambda Functions, Batch, DynamoDB).
 
 - 2022/12/22: **AWS Integration: Step Function, Lambda, Batch, DynamoDB** (/StepFunction-Batch-DDB)
 ![stepfunction.png](statemachine-graph.png)
