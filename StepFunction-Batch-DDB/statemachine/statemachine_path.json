@@ -1,5 +1,8 @@
 {
-  "Comment": "statemachine",
+  // inputPath: input from which node
+  // outputPath: output entire node from where
+  // resultPath: replace partial node from where
+  "Comment": "statemachine input/output/result path example",
   "StartAt": "Lambda1",
   "States": {
     "Lambda1": {
