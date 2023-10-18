@@ -1,0 +1,80 @@
+{
+  "Comment": "statemachine",
+  "StartAt": "Lambda1",
+  "States": {
+    "Lambda1": {
+      "Type": "Task",
+      "Resource": "${Lambda1Arn}",
+      "Next": "Lambda2"
+    },
+    "Lambda2": {
+      "Type": "Task",
+      "Resource": "${Lambda2Arn}",
+      "ResultPath": "$", // attach result to the $ node (root)
+      "Parameters": {
+        "Payload.$": "$"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.EfsMountTimeoutException",
+            "Lambda.Unknown"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 20,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "batch1"
+    },
+    "batch1": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "ResultPath": "$.batchResults.batch1", // attach result to the $.batchResults.batch1 (child node)
+      "Parameters": {
+        "JobName": "Export2Sequence",
+        "JobDefinition": "${batch1Def}",
+        "JobQueue": "${batchJobQueue}",
+        "Parameters": {
+          "script": "/tmp/run.sh",
+          "s3_key.$": "$.body.session_id",
+          "mode": "batch1"
+        }
+      },
+      "Next": "batch2"
+    },
+    "batch2": {
+      "Type": "Task",
+      "ResultPath": "$.batchResults.batch2",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "Parameters": {
+        "JobName": "batch2",
+        "JobDefinition": "${batch2JobDef}",
+        "JobQueue": "${batchJobQueue}",
+        "Parameters": {
+          "script": "/tmp/run.sh",
+          "s3_key.$": "$.body.session_id"
+        }
+      },
+      "Next": "batch3"
+    },
+    "batch3": {
+      "Type": "Task",
+      "ResultPath": "$.batchResults.batch3",
+      "Resource": "arn:aws:states:::batch:submitJob.sync",
+      "Parameters": {
+        "JobName": "batch3",
+        "JobDefinition": "${batch3JobDef}",
+        "JobQueue": "${batchJobQueue}",
+        "Parameters": {
+          "script": "/tmp/run.sh",
+          "s3_key.$": "$.body.session_id"
+        }
+      },
+      "End": true
+    }
+  }
+}
